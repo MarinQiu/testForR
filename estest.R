@@ -1,4 +1,4 @@
-# #½ÓÊÕÃüÁîĞĞ²ÎÊı
+# #?????????Ğ²???
 # Args <- str_conv(commandArgs(TRUE),"CP936")
 # 
 # cat("Args=",Args,"\n")
@@ -14,10 +14,10 @@ library('bootstrap')
 library('ggplot2')
 library('rredis')
 
-#nÎª¶àÏîÊ½»Ø¹éµÄÏµÊı
+
 n <- 5
 
-#¸ù¾İÏµÊıÈ¡µÃ¶àÏîÊ½»Ø¹éµÄ·½³ÌÊ½
+#????Ïµ??È¡?Ã¶???Ê½?Ø¹??Ä·???Ê½
 get.fmla <- function(ystr,xstr,n){
   xnam <- paste(xstr,1:n,sep = "^")
   ynam <- paste("I(",xnam,")",collapse = "+", sep = "")
@@ -49,23 +49,23 @@ shrinkage <-function(fit, k=10){
 
 #cat("Args=",Args,"\n")
 
-#Á¬½ÓES
+#Á¬??ES
 connect(es_host = "192.168.0.170", es_port = 9200, es_transport_schema = "http")
 
 
-#DSL²éÑ¯Óï¾ä
+#DSL??Ñ¯????
 querysentence <- '{
   "query": {
     "bool": {
       "must":[
       {
         "term": {
-          "skuname_not_analyzed": "ĞÂ´óËâ"
+          "skuname_not_analyzed": "?Â´???"
           }
       },
        {
         "term": {
-           "store_name": "ÆëÂ³ÉÌ³Ç"
+           "store_name": "??Â³?Ì³?"
           }
        }
        ]
@@ -77,25 +77,25 @@ querysentence <- '{
 
 querysentence <- fromJSON(str_conv(querysentence,"CP936"), method = "R")
 
-#»ñÈ¡Êı¾İ
+#??È¡????
 result <- Search(index = "retail", type = "receipt", body = querysentence, fields = c("time_sale","skuname","actual_selling_price","num_sale","store_name"), size = 100000, asdf = T, scroll = "1m")$hits$hits$fields
 
-#È¥µôlist¸ñÊ½
+#È¥??list??Ê½
 result <- as.data.frame(apply(result,2,unlist), stringsAsFactors = F)
 
-#×ª»»¸ñÊ½
+#×ª????Ê½
 result <- transform(result, actual_selling_price = as.numeric(actual_selling_price), num_sale = as.numeric(num_sale), time_sale = as.POSIXlt(time_sale), skuname = skuname, store_name = store_name)
 
 #store_nameÉ¸Ñ¡
-#result <- result[which(result$store_name=="ÒË¼Òµê"),]
+#result <- result[which(result$store_name=="?Ë¼Òµ?"),]
 
-#Ê±¼ä·¶Î§É¸Ñ¡
+#Ê±?ä·¶Î§É¸Ñ¡
 #result <- result[which(result$time_sale>as.POSIXlt("2015-05-15") & result$time_sale<as.POSIXlt("2015-06-15")),]
 
-#»ñµÃÃ¿Ìì¸ÃÉÌÆ·µÄÏúÁ¿
+#????Ã¿??????Æ·????Á¿
 num_daily <- tapply(result$num_sale,as.character(result$time_sale),sum, simplify = T)
 
-#»ñµÃÃ¿Ìì¸ÃÉÌÆ·µÄ¼Û¸ñ
+#????Ã¿??????Æ·?Ä¼Û¸?
 price_daily <- tapply(result$actual_selling_price,as.character(result$time_sale),function(x){
   price_daily <- table(x)/length(x)
   price_daily <- as.numeric(names(price_daily))%*%as.numeric(price_daily)
@@ -110,7 +110,7 @@ ggplot(data = data, aes(x=price,y=num))+geom_point()+stat_smooth(method = lm, fo
 
 model <- lm(data = data, get.fmla("num","price",n))
 
-#Ñ¡Ôñ±äÁ¿£¬Öğ²½»Ø¹é·¨
+#Ñ¡????Á¿???ğ²½»Ø¹é·¨
 bestmodel <- stepAIC(model, direction = "backward")
 
 resultlist <- shrinkage(bestmodel)
