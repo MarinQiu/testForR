@@ -3,7 +3,7 @@
 # 
 # cat("Args=",Args,"\n")
 1
-
+3
 
 library('rjson')
 library('elastic')
@@ -49,7 +49,7 @@ shrinkage <-function(fit, k=10){
 
 #cat("Args=",Args,"\n")
 
-#��??ES
+#��??ES
 connect(es_host = "192.168.0.170", es_port = 9200, es_transport_schema = "http")
 
 
@@ -92,7 +92,7 @@ result <- transform(result, actual_selling_price = as.numeric(actual_selling_pri
 #ʱ?䷶Χɸѡ
 #result <- result[which(result$time_sale>as.POSIXlt("2015-05-15") & result$time_sale<as.POSIXlt("2015-06-15")),]
 
-#????ÿ??????Ʒ????��
+#????ÿ??????Ʒ????��
 num_daily <- tapply(result$num_sale,as.character(result$time_sale),sum, simplify = T)
 
 #????ÿ??????Ʒ?ļ۸?
@@ -110,7 +110,7 @@ ggplot(data = data, aes(x=price,y=num))+geom_point()+stat_smooth(method = lm, fo
 
 model <- lm(data = data, get.fmla("num","price",n))
 
-#ѡ????��???𲽻ع鷨
+#ѡ????��???𲽻ع鷨
 bestmodel <- stepAIC(model, direction = "backward")
 
 resultlist <- shrinkage(bestmodel)
